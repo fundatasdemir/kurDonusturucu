@@ -32,94 +32,119 @@ class _AnaSayfaState extends State<AnaSayfa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Kur Dönüştürücü"),
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: Colors.cyan,
-          fontSize: 25,
-          decoration: TextDecoration.none,
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text("Kur Dönüştürücü"),
+      titleTextStyle: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.cyan,
+        fontSize: 25,
+        decoration: TextDecoration.none,
+      ),
+      backgroundColor: Colors.orange,
+      centerTitle: true,
+      leading: Icon(Icons.change_circle),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.change_circle, color: Colors.black),
+          onPressed: () {},
         ),
-        backgroundColor: Colors.orange,
-        centerTitle: true,
-        leading: Icon(Icons.change_circle),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.change_circle, color: Colors.black),
-            onPressed: () {},
-          ),
+      ],
+    );
+  }
+
+  Widget _buildBody() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          _builKurDonusturucuRow(),
+          SizedBox(width: 25),
+          _buildSonucText(),
+          SizedBox(width: 25),
+          _buildAyiriciCizgi(),
+          SizedBox(width: 25),
+          _buildKurList(),
         ],
       ),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Miktarı giriniz:",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                        width: 2.0,
-                        style: BorderStyle.solid,
-                        strokeAlign: 15,
-                      ),
-                    ),
-                  ),
-                  onChanged: (String yeniDeger) {
-                    _hesapla();
-                  },
-                ),
-              ),
-              SizedBox(
-                width: 16,
-              ),
-              DropdownButton<String>(
-                value: _secilenKur,
-                items: _oranlar.keys.map((String kur) {
-                  return DropdownMenuItem<String>(
-                    value: kur,
-                    child: Text(kur),
-                  );
-                }).toList(),
-                onChanged: (String? yeniDeger) {
-                  if (yeniDeger != null) {
-                    _secilenKur = yeniDeger;
-                    _hesapla();
-                  }
-                },
-                icon: Icon(Icons.arrow_downward),
-                underline: SizedBox(),
-              ),
-            ],
-          ),
-          SizedBox(height: 25),
-          Text(
-            "Sonuç:${_sonuc.toStringAsFixed(2)} TL",
-            style: TextStyle(
-              fontSize: 20,
+    );
+  }
+
+  Widget _builKurDonusturucuRow() {
+    return Row(
+      children: [_buildKurTextField(), SizedBox(width: 16), _buildKurDrodown()],
+    );
+  }
+
+  Widget _buildKurTextField() {
+    return Expanded(
+      child: TextField(
+        controller: _controller,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          hintText: "Miktarı giriniz:",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 2.0,
+              style: BorderStyle.solid,
+              strokeAlign: 15,
             ),
           ),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-            height: 3,
-            color: Colors.black,
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: _oranlar.keys.length, itemBuilder: _buildListItem),
-          )
-        ],
+        ),
+        onChanged: (String yeniDeger) {
+          _hesapla();
+        },
       ),
+    );
+  }
+
+  Widget _buildKurDrodown() {
+    return DropdownButton<String>(
+      value: _secilenKur,
+      items: _oranlar.keys.map((String kur) {
+        return DropdownMenuItem<String>(
+          value: kur,
+          child: Text(kur),
+        );
+      }).toList(),
+      onChanged: (String? yeniDeger) {
+        if (yeniDeger != null) {
+          _secilenKur = yeniDeger;
+          _hesapla();
+        }
+      },
+      icon: Icon(Icons.arrow_downward),
+      underline: SizedBox(),
+    );
+  }
+
+  Widget _buildSonucText() {
+    return Text(
+      "Sonuç:${_sonuc.toStringAsFixed(2)} TL",
+      style: TextStyle(
+        fontSize: 20,
+      ),
+    );
+  }
+
+  Widget _buildAyiriciCizgi() {
+    return Container(
+      height: 3,
+      color: Colors.black,
+    );
+  }
+
+  Widget _buildKurList() {
+    return Expanded(
+      child: ListView.builder(
+          itemCount: _oranlar.keys.length, itemBuilder: _buildListItem),
     );
   }
 
